@@ -6,12 +6,14 @@ import CompanyForm from './components/companyForm';
 import AnimalTable from './components/animalTable';
 import AnimalForm from './components/animalForm';
 
+
 class App extends Component {
   constructor() {
     super();
     this.state = {
       'company': '',
-      'data': []
+      'data': [],
+      'animal': ''
     }
   }
 
@@ -29,11 +31,27 @@ class App extends Component {
     fetch('https://learnwebcode.github.io/json-example/animals-1.json')
       .then(response => response.json())
       .then(data => this.setState({ data }));
+
     console.log(this.state.data);
   }
 
-  handleAniClick = event => {
-    this.setState({ '': event.target.value });
+  searchAnimal = event => {
+    event.preventDefault();
+
+    let animal = event.target.name.value;
+
+    this.setState({ animal });
+
+    fetch('https://learnwebcode.github.io/json-example/animals-1.json')
+      .then(response => response.json())
+      .then(data => {
+        // filter out all animals with correct name
+        let filtered = data.filter( row => {
+          return row.name.toLowerCase().indexOf(animal.toLowerCase()) >= 0;
+        });
+
+        this.setState({ 'data': filtered })
+      });
   }
 
   render() {
@@ -45,9 +63,8 @@ class App extends Component {
         <Information company={this.state.company} />
 
         <h1>Animals</h1>
-        <AnimalForm handleAniClick={this.handleAniClick} animal={this.animalName}/>
-        <p></p>
         <button onClick={this.getAnimals}>Get Animals</button>
+        <AnimalForm animal={this.state.animal} searchAnimal={this.searchAnimal} />
         {
           this.state.data[0] &&
             <AnimalTable data={this.state.data} />

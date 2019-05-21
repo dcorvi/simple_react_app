@@ -3,11 +3,12 @@ import './index.css';
 
 class AnimalForm extends Component {
   render() {
-      return (
-        <form action="" method="POST" className="AnimalForm">
+    return (
+      <form onSubmit={this.props.searchAnimal} action="" method="POST" className="AnimalForm">
         <label htmlFor="name">Animal Name: </label>
-        <input name="name" type="text" value={this.props.animalName} onChange={this.props.getAnimalName} />
-        </form>
+        <input name="name" type="text" placeholder={this.props.animal} />
+        <input name="submit" type="submit" value="Search Animal" />
+      </form>
     );
   }
 }
